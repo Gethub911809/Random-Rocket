@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div>
+        <h1>Welcome To Random Rocket</h1>
+        <p>This is a website to showcase rocketry photos on command.</p>
+        <button id="generate-all" onclick="generatePhoto(); generateVideo(); generateAudio();">Generate All</button>
+        <br></br>
+        <button id="generate-photo" onclick="generatePhoto()">Generate Photo</button>
+        <button id="generate-video" onclick="generateVideo()">Generate Video</button>
+        <button id="generate-audio" onclick="generateAudio()">Generate Audio</button>
+    </div>
+    <div id="photo-container">
+        <img id="photo" src="" alt="Rocket Photo">
+    </div>
+    <div id="description-container-photo">
+        <p id="description-photo" alt="Rocket Description"></p>
+    </div>
+    <div id="video-container">
+        <video id="video" controls></video>
+    </div>
+    <div id="description-container-video">
+        <p id="description-video" alt="Rocket Description"></p>
+    </div>
+    <div id="audio-container">
+        <audio id="audio" controls></audio>
+    </div>
+    <div id="description-container-audio">
+        <p id="description-audio" alt="Rocket Description"></p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
