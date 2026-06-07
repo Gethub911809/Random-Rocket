@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
-<body>
+<body onload="fetchData();">
     <div>
         <h1>Welcome To Random Rocket</h1>
         <p>This is a website to showcase rocketry photos on command.</p>
@@ -21,6 +22,10 @@
             <button id="previous-video" onclick="previousVideo()">Previous Video</button>
             <button id="previous-audio" onclick="previousAudio()">Previous Audio</button>
         </div>
+        <form id="search-row" class="button-row" onsubmit="userSearch(); return false;">
+            <input id="search-box"type="text" placeholder="Rocket Launch">
+            <button id="search" type="submit"><i class="fa fa-search"></i></button>
+        </form>
     </div>
     <div id="photo-container">
         <img id="photo" src="" alt="Rocket Photo">

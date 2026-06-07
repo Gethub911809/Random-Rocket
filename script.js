@@ -1,50 +1,52 @@
 let nasaDataImg;
 let nasaDataVideo;
 let nasaDataAudio;
-fetch("https://images-api.nasa.gov/search?q=Rocket%20Launch&media_type=image")
-  .then((response) => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      throw new Error("NETWORK RESPONSE ERROR");
-    }
-  })
-  .then(data => {
-    nasaDataImg = data;
-    console.log(data);
-    generatePhoto(data)
-  })
-  .catch((error) => console.error("FETCH ERROR:", error));
-fetch("https://images-api.nasa.gov/search?q=Rocket%20Launch&media_type=video")
-  .then((response) => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      throw new Error("NETWORK RESPONSE ERROR");
-    }
-  })
-  .then(data => {
-    nasaDataVideo = data;
-    console.log(data);
-    generateVideo(data)
-  })
-  .catch((error) => console.error("FETCH ERROR:", error));
+let search = "Rocket Launch";
+function fetchData(){
+    fetch(`https://images-api.nasa.gov/search?q=${search.replace(" ", "%20")}&media_type=image`)
+    .then((response) => {
+        if (response.ok) {
+        return response.json();
+        } else {
+        throw new Error("NETWORK RESPONSE ERROR");
+        }
+    })
+    .then(data => {
+        nasaDataImg = data;
+        console.log(data);
+        generatePhoto(data)
+    })
+    .catch((error) => console.error("FETCH ERROR:", error));
+    fetch(`https://images-api.nasa.gov/search?q=${search.replace(" ", "%20")}&media_type=video`)
+    .then((response) => {
+        if (response.ok) {
+        return response.json();
+        } else {
+        throw new Error("NETWORK RESPONSE ERROR");
+        }
+    })
+    .then(data => {
+        nasaDataVideo = data;
+        console.log(data);
+        generateVideo(data)
+    })
+    .catch((error) => console.error("FETCH ERROR:", error));
 
-fetch("https://images-api.nasa.gov/search?q=Rocket%20Launch&media_type=audio")
-  .then((response) => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      throw new Error("NETWORK RESPONSE ERROR");
-    }
-  })
-  .then(data => {
-    nasaDataAudio = data;
-    console.log(data);
-    generateAudio(data)
-  })
-  .catch((error) => console.error("FETCH ERROR:", error));
-
+    fetch(`https://images-api.nasa.gov/search?q=${search.replace(" ", "%20")}&media_type=audio`)
+    .then((response) => {
+        if (response.ok) {
+        return response.json();
+        } else {
+        throw new Error("NETWORK RESPONSE ERROR");
+        }
+    })
+    .then(data => {
+        nasaDataAudio = data;
+        console.log(data);
+        generateAudio(data)
+    })
+    .catch((error) => console.error("FETCH ERROR:", error));
+}
 let photoHystory = [];
 let photoIndex = -1;
 function generatePhoto() {
@@ -164,4 +166,9 @@ function showLessDescription() {
     descriptionContainer.innerHTML = `
     <p>${slice}</p>
     <a href="#description-container-audio" onclick="showMoreDescription()">Read More</a>`;
+}
+function userSearch(){
+    search = document.getElementById("search-box").value;
+    console.log(search);
+    fetchData();
 }
