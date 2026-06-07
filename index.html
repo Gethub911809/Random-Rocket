@@ -11,10 +11,16 @@
         <h1>Welcome To Random Rocket</h1>
         <p>This is a website to showcase rocketry photos on command.</p>
         <button id="generate-all" onclick="generatePhoto(); generateVideo(); generateAudio();">Generate All</button>
-        <br></br>
-        <button id="generate-photo" onclick="generatePhoto()">Generate Photo</button>
-        <button id="generate-video" onclick="generateVideo()">Generate Video</button>
-        <button id="generate-audio" onclick="generateAudio()">Generate Audio</button>
+        <div class="button-row">
+            <button id="generate-photo" onclick="generatePhoto()">Generate Photo</button>
+            <button id="generate-video" onclick="generateVideo()">Generate Video</button>
+            <button id="generate-audio" onclick="generateAudio()">Generate Audio</button>
+        </div>
+        <div class="button-row">
+            <button id="previous-photo" onclick="previousPhoto()">Previous Photo</button>
+            <button id="previous-video" onclick="previousVideo()">Previous Video</button>
+            <button id="previous-audio" onclick="previousAudio()">Previous Audio</button>
+        </div>
     </div>
     <div id="photo-container">
         <img id="photo" src="" alt="Rocket Photo">

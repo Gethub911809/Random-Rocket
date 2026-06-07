@@ -45,55 +45,123 @@ fetch("https://images-api.nasa.gov/search?q=Rocket%20Launch&media_type=audio")
   })
   .catch((error) => console.error("FETCH ERROR:", error));
 
+let photoHystory = [];
+let photoIndex = -1;
 function generatePhoto() {
     
     const hits = nasaDataImg.collection.metadata.total_hits;
     const pageNum = Math.floor(Math.random() * (hits/100))+1;
+    //Getting photo and data
     const photo = nasaDataImg.collection.items[Math.floor(Math.random() * nasaDataImg.collection.items.length)];
+    photoHystory.push(photo);
+    photoIndex++;
+    displayPhoto(photo);
+}
+function displayPhoto(photo) {
     const photoContainer = document.getElementById("photo-container");
 
     const descriptionContainer = document.getElementById("description-container-photo");
     photoContainer.innerHTML = `<img id="photo" src="${photo.links[0].href}" alt="Rocket Photo">`;
     descriptionContainer.innerHTML = `<p>${photo.data[0].description}</p>`;
 }
+function previousPhoto() {
+    if (photoIndex > 0) {
+        photoIndex--;
+        displayPhoto(photoHystory[photoIndex]);
+    }
+}
+
+let videoHystoryMP4 = [];
+let videoHystoryData = [];
+let videoIndex = -1;
 async function generateVideo() {
     
     const hits = nasaDataVideo.collection.metadata.total_hits;
     const pageNum = Math.floor(Math.random() * (hits/100))+1;
+    //Getting chunck of Video data/meta data and unspecified MP4
     const Video = nasaDataVideo.collection.items[Math.floor(Math.random() * nasaDataVideo.collection.items.length)];
-    const VideoContainer = document.getElementById("video-container");
-
-    console.log(Video.href);
-
+    
+    //Getting the MP4 File
     const assetResponse = await fetch(
         Video.href.replace("http://", "https://")
     );
     const assets = await assetResponse.json();
-
     const mp4 = assets.find(file => file.endsWith("~orig.mp4"));
-    console.log(mp4);
+    videoHystoryMP4.push(mp4);
+    videoHystoryData.push(Video);
+    videoIndex++;
+    displayVideo(Video,mp4);
+}
+function displayVideo(Video,mp4) {
+    const VideoContainer = document.getElementById("video-container");
     VideoContainer.innerHTML = `
     <video id="video" src="${mp4}" alt="Rocket Video" controls>
         <source src="${mp4}" type="video/mp4">
     </video>`;
-    console.log(mp4);
     const descriptionContainer = document.getElementById("description-container-video")
     descriptionContainer.innerHTML = `<p>${Video.data[0].description}</p>`;
 }
+function previousVideo() {
+    if (videoIndex > 0) {
+        videoIndex--;
+        displayVideo(videoHystoryData[videoIndex], videoHystoryMP4[videoIndex]);
+    }
+}
+
+let audioHystoryMP3 = [];
+let audioHystoryData = [];
+let audioIndex = -1;
+let fullAudioDescription;
 async function generateAudio() {
     const hits = nasaDataAudio.collection.metadata.total_hits;
     const pageNum = Math.floor(Math.random() * (hits/100))+1;
+    //Getting chunck of Audio data/meta data and unspecified MP3
     const Audio = nasaDataAudio.collection.items[Math.floor(Math.random() * nasaDataAudio.collection.items.length)];
-    const AudioContainer = document.getElementById("audio-container");
 
     const assetResponse = await fetch(
         Audio.href.replace("http://", "https://")
     );
     const assets = await assetResponse.json();
-
+    //Getting the MP3 File
     const mp3 = assets.find(file => file.endsWith(".mp3"));
+    audioHystoryMP3.push(mp3);
+    audioHystoryData.push(Audio);
+    audioIndex++;
+    displayAudio(Audio, mp3);
+
+}
+function displayAudio(Audio, mp3) {
+    const AudioContainer = document.getElementById("audio-container");
+
     AudioContainer.innerHTML = `<audio id="audio" src="${mp3}" alt="Rocket Audio" controls></audio>`;
-    
+
     const descriptionContainer = document.getElementById("description-container-audio");
-    descriptionContainer.innerHTML = `<p>${Audio.data[0].description}</p>`;
+    fullAudioDescription = Audio.data[0].description;
+    if ((fullAudioDescription.length) < 1200) {
+        descriptionContainer.innerHTML = `<p>${fullAudioDescription}</p>`;
+    } else {
+        const slice = fullAudioDescription.slice(0,1000).trim() + "...";
+        descriptionContainer.innerHTML = `
+        <p>${slice}</p>
+        <a href="#description-container-audio" onclick="showMoreDescription()">Read More</a>`;
+    }
+}
+function previousAudio() {
+    if (audioIndex > 0) {
+        audioIndex--;
+        displayAudio(audioHystoryData[audioIndex], audioHystoryMP3[audioIndex]);
+    }
+}
+function showMoreDescription() {
+    const descriptionContainer = document.getElementById("description-container-audio");
+    descriptionContainer.innerHTML = `<a href="#description-container-audio" onclick="showLessDescription()">Read Less</a>
+    <p>${fullAudioDescription}</p>
+    <a href="#description-container-audio" onclick="showLessDescription()">Read Less</a>`;
+}
+function showLessDescription() {
+    const descriptionContainer = document.getElementById("description-container-audio");
+    const slice = fullAudioDescription.slice(0,1000).trim() + "...";
+    descriptionContainer.innerHTML = `
+    <p>${slice}</p>
+    <a href="#description-container-audio" onclick="showMoreDescription()">Read More</a>`;
 }
