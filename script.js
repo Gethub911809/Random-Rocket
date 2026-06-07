@@ -3,53 +3,56 @@ let nasaDataVideo;
 let nasaDataAudio;
 let search = "Rocket Launch";
 function fetchData(){
+    if(search == ""){
+        search = "Rocket Launch";
+    }
     fetch(`https://images-api.nasa.gov/search?q=${search.replace(" ", "%20")}&media_type=image`)
-    .then((response) => {
-        if (response.ok) {
-        return response.json();
-        } else {
-        throw new Error("NETWORK RESPONSE ERROR");
-        }
-    })
-    .then(data => {
-        nasaDataImg = data;
-        console.log(data);
-        generatePhoto(data)
+        .then((response) => {
+            if (response.ok) {
+            return response.json();
+            } else {
+            throw new Error("NETWORK RESPONSE ERROR");
+            }
+        })
+        .then(data => {
+            nasaDataImg = data;
+            console.log(data);
+            generatePhoto(false)
     })
     .catch((error) => console.error("FETCH ERROR:", error));
     fetch(`https://images-api.nasa.gov/search?q=${search.replace(" ", "%20")}&media_type=video`)
-    .then((response) => {
-        if (response.ok) {
-        return response.json();
-        } else {
-        throw new Error("NETWORK RESPONSE ERROR");
-        }
-    })
-    .then(data => {
-        nasaDataVideo = data;
-        console.log(data);
-        generateVideo(data)
-    })
-    .catch((error) => console.error("FETCH ERROR:", error));
+        .then((response) => {
+            if (response.ok) {
+            return response.json();
+            } else {
+            throw new Error("NETWORK RESPONSE ERROR");
+            }
+        })
+        .then(data => {
+            nasaDataVideo = data;
+            console.log(data);
+            generateVideo(false)
+        })
+        .catch((error) => console.error("FETCH ERROR:", error));
 
     fetch(`https://images-api.nasa.gov/search?q=${search.replace(" ", "%20")}&media_type=audio`)
-    .then((response) => {
-        if (response.ok) {
-        return response.json();
-        } else {
-        throw new Error("NETWORK RESPONSE ERROR");
-        }
-    })
-    .then(data => {
-        nasaDataAudio = data;
-        console.log(data);
-        generateAudio(data)
-    })
-    .catch((error) => console.error("FETCH ERROR:", error));
+        .then((response) => {
+            if (response.ok) {
+            return response.json();
+            } else {
+            throw new Error("NETWORK RESPONSE ERROR");
+            }
+        })
+        .then(data => {
+            nasaDataAudio = data;
+            console.log(data);
+            generateAudio(false)
+        })
+        .catch((error) => console.error("FETCH ERROR:", error));
 }
 let photoHystory = [];
 let photoIndex = -1;
-function generatePhoto() {
+function generatePhoto(scroll = true) {
     
     const hits = nasaDataImg.collection.metadata.total_hits;
     const pageNum = Math.floor(Math.random() * (hits/100))+1;
@@ -57,26 +60,32 @@ function generatePhoto() {
     const photo = nasaDataImg.collection.items[Math.floor(Math.random() * nasaDataImg.collection.items.length)];
     photoHystory.push(photo);
     photoIndex++;
-    displayPhoto(photo);
+    displayPhoto(photo,scroll);
 }
-function displayPhoto(photo) {
+function displayPhoto(photo,scroll) {
     const photoContainer = document.getElementById("photo-container");
 
     const descriptionContainer = document.getElementById("description-container-photo");
     photoContainer.innerHTML = `<img id="photo" src="${photo.links[0].href}" alt="Rocket Photo">`;
     descriptionContainer.innerHTML = `<p>${photo.data[0].description}</p>`;
+    if(scroll){
+        photoContainer.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
 }
 function previousPhoto() {
     if (photoIndex > 0) {
         photoIndex--;
-        displayPhoto(photoHystory[photoIndex]);
+        displayPhoto(photoHystory[photoIndex],true);
     }
 }
 
 let videoHystoryMP4 = [];
 let videoHystoryData = [];
 let videoIndex = -1;
-async function generateVideo() {
+async function generateVideo(scroll = true) {
     
     const hits = nasaDataVideo.collection.metadata.total_hits;
     const pageNum = Math.floor(Math.random() * (hits/100))+1;
@@ -92,9 +101,9 @@ async function generateVideo() {
     videoHystoryMP4.push(mp4);
     videoHystoryData.push(Video);
     videoIndex++;
-    displayVideo(Video,mp4);
+    displayVideo(Video,mp4,scroll);
 }
-function displayVideo(Video,mp4) {
+function displayVideo(Video,mp4,scroll) {
     const VideoContainer = document.getElementById("video-container");
     VideoContainer.innerHTML = `
     <video id="video" src="${mp4}" alt="Rocket Video" controls>
@@ -102,11 +111,17 @@ function displayVideo(Video,mp4) {
     </video>`;
     const descriptionContainer = document.getElementById("description-container-video")
     descriptionContainer.innerHTML = `<p>${Video.data[0].description}</p>`;
+    if(scroll){
+        VideoContainer.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
 }
 function previousVideo() {
     if (videoIndex > 0) {
         videoIndex--;
-        displayVideo(videoHystoryData[videoIndex], videoHystoryMP4[videoIndex]);
+        displayVideo(videoHystoryData[videoIndex], videoHystoryMP4[videoIndex],true);
     }
 }
 
@@ -114,7 +129,7 @@ let audioHystoryMP3 = [];
 let audioHystoryData = [];
 let audioIndex = -1;
 let fullAudioDescription;
-async function generateAudio() {
+async function generateAudio(scroll = true) {
     const hits = nasaDataAudio.collection.metadata.total_hits;
     const pageNum = Math.floor(Math.random() * (hits/100))+1;
     //Getting chunck of Audio data/meta data and unspecified MP3
@@ -129,10 +144,10 @@ async function generateAudio() {
     audioHystoryMP3.push(mp3);
     audioHystoryData.push(Audio);
     audioIndex++;
-    displayAudio(Audio, mp3);
+    displayAudio(Audio, mp3,scroll);
 
 }
-function displayAudio(Audio, mp3) {
+function displayAudio(Audio, mp3,scroll) {
     const AudioContainer = document.getElementById("audio-container");
 
     AudioContainer.innerHTML = `<audio id="audio" src="${mp3}" alt="Rocket Audio" controls></audio>`;
@@ -147,11 +162,17 @@ function displayAudio(Audio, mp3) {
         <p>${slice}</p>
         <a href="#description-container-audio" onclick="showMoreDescription()">Read More</a>`;
     }
+    if(scroll){
+        AudioContainer.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
 }
 function previousAudio() {
     if (audioIndex > 0) {
         audioIndex--;
-        displayAudio(audioHystoryData[audioIndex], audioHystoryMP3[audioIndex]);
+        displayAudio(audioHystoryData[audioIndex], audioHystoryMP3[audioIndex],true);
     }
 }
 function showMoreDescription() {
@@ -169,6 +190,6 @@ function showLessDescription() {
 }
 function userSearch(){
     search = document.getElementById("search-box").value;
-    console.log(search);
     fetchData();
+    console.log(search);
 }

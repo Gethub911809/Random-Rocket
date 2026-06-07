@@ -15,15 +15,15 @@ body > div:not(#search-row) {
     max-width: 80vw;
     margin: 20px auto;
     text-align: center;
-    button:not(#search) {
-        background-color: #1c6599;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 5px;
-    }
+}
+button:not(#search,#generate-all) {
+    background-color: #1c6599;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
 }
 #search-row {
     margin: auto;
@@ -72,4 +72,24 @@ a:link {
 }
 .button-row{
     margin-top: 10px;
+}
+@media (max-width: 768px) {
+    button:not(#search,#generate-all) {
+        background-color: #1c6599;
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        font-size: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    #generate-all {
+        background-color: #1c6599;
+        color: white;
+        border: none;
+        padding: 8px 30px;
+        font-size: 12px;
+        cursor: pointer;
+        border-radius: 5px;
+    }   
 }
